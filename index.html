@@ -1,71 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hey Farmer</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hey Farmer | Maa Pitambara Fertilizers and Chemicals</title>
 <style>
-body{font-family:Arial,sans-serif;margin:0;background:#f2f8ef;color:#203020}
-header{background:#176b35;color:white;padding:22px;text-align:center}
-main{padding:16px;max-width:600px;margin:auto}
-.card{background:white;padding:16px;margin:12px 0;border-radius:12px;box-shadow:0 2px 7px #ddd}
-input,button{box-sizing:border-box;width:100%;padding:12px;margin:6px 0;border-radius:7px;border:1px solid #bbb;font-size:16px}
-button{background:#176b35;color:white;border:0}
-h2{color:#176b35}
+:root{--green:#176b35;--light:#f2f8ef;--ink:#203020;--line:#d7e2d4}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--light);color:var(--ink)}
+header{background:var(--green);color:white;padding:22px 16px;text-align:center}header h1{margin:0 0 8px;font-size:28px}header p{margin:0}
+main{max-width:760px;margin:auto;padding:14px}.card{background:white;border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 2px 8px #00000012}
+h2{font-size:20px;color:var(--green);margin:0 0 12px}label{display:block;font-weight:600;margin-top:10px}
+input,select,textarea,button{width:100%;font:inherit;padding:12px;margin-top:6px;border:1px solid #b8c8b4;border-radius:8px}
+button{background:var(--green);color:white;border:0;font-weight:700;cursor:pointer}.secondary{background:#e7f1e3;color:var(--green);border:1px solid #b8d0b0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.item{border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0}.item h3{margin:0 0 5px}.muted{color:#596859;font-size:14px}.notice{background:#fff5d7;padding:10px;border-radius:8px;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+footer{text-align:center;padding:20px;font-size:13px;color:#536353}
+@media(max-width:460px){.grid{grid-template-columns:1fr}header h1{font-size:24px}}
 </style>
 </head>
 <body>
-<header>
-<h1>🌾 Hey Farmer</h1>
-<p>Maa Pitambara Fertilizers and Chemicals</p>
-</header>
+<header><h1>🌾 Hey Farmer</h1><p>Maa Pitambara Fertilizers and Chemicals</p><p>किसानों का विश्वास ही हमारी पहचान</p></header>
 <main>
-<div class="card">
-<h2>किसान रजिस्ट्रेशन</h2>
-<input id="name" placeholder="किसान का नाम">
-<input id="mobile" type="tel" placeholder="मोबाइल नंबर">
-<input id="village" placeholder="गाँव का नाम">
-<button onclick="registerFarmer()">रजिस्ट्रेशन करें</button>
-<p id="message"></p>
+<section class="card">
+<h2>👨‍🌾 किसान रजिस्ट्रेशन</h2>
+<label>किसान का नाम<input id="farmerName" placeholder="पूरा नाम"></label>
+<label>मोबाइल नंबर<input id="farmerMobile" inputmode="numeric" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर"></label>
+<label>गाँव<input id="farmerVillage" placeholder="गाँव का नाम"></label>
+<button onclick="registerFarmer()">रजिस्ट्रेशन करें</button><p id="farmerMsg" aria-live="polite"></p>
+</section>
+<section class="card">
+<h2>🛒 खाद, बीज एवं कृषि उत्पाद</h2>
+<p class="muted">कीमत और स्टॉक दुकान संचालक से पुष्टि करके ही ऑर्डर पूरा होगा।</p>
+<div id="products"></div>
+</section>
+<section class="card">
+<h2>📦 आपका कार्ट</h2><div id="cart"><p>अभी कार्ट खाली है।</p></div>
+<label>डिलीवरी गाँव/पता<input id="deliveryAddress" placeholder="गाँव और पूरा पता"></label>
+<label>ऑर्डर के लिए मोबाइल नंबर<input id="orderMobile" inputmode="numeric" maxlength="10" placeholder="10 अंकों का नंबर"></label>
+<button onclick="placeOrder()">ऑर्डर अनुरोध भेजें</button><p id="orderMsg" aria-live="polite"></p>
+<p class="muted">यह डेमो ऑर्डर इस ब्राउज़र में सेव होता है; दुकान को अपने-आप ऑनलाइन नहीं भेजा जाता।</p>
+</section>
+<section class="card">
+<h2>🔎 ऑर्डर की स्थिति</h2>
+<label>ऑर्डर नंबर<input id="lookupOrder" placeholder="जैसे HF-123456"></label>
+<button class="secondary" onclick="lookupStatus()">स्थिति देखें</button><p id="lookupMsg" aria-live="polite"></p>
+</section>
+<section class="card">
+<h2>🔐 एडमिन पैनल</h2>
+<p class="notice">यह केवल स्थानीय डेमो लॉगिन है, सुरक्षित ऑनलाइन लॉगिन नहीं। सार्वजनिक वेबसाइट पर असली किसान डेटा न रखें।</p>
+<label>डेमो PIN<input id="adminPin" type="password" inputmode="numeric" placeholder="डेमो PIN"></label>
+<button onclick="adminLogin()">एडमिन लॉगिन</button><p id="adminMsg" aria-live="polite"></p>
+<div id="adminPanel" hidden>
+<h2>किसान सूची</h2><div id="adminFarmers"></div>
+<h2>ऑर्डर प्रबंधन</h2><div id="adminOrders"></div>
+<h2>स्टॉक प्रबंधन</h2><div id="adminStock"></div>
+<button class="secondary" onclick="downloadBackup()">CSV बैकअप डाउनलोड करें</button>
+<button class="secondary" onclick="adminLogout()">लॉगआउट</button>
 </div>
-<div class="card">
-<h2>🛒 खाद एवं कृषि उत्पाद</h2>
-<p>बीज, खाद और कीटनाशक के लिए संपर्क करें।</p>
-<button onclick="location.href='tel:7906720794'">ऑर्डर के लिए कॉल करें</button>
-</div>
-<div class="card">
-<h2>किसान रजिस्ट्रेशन सूची</h2>
-<div id="farmers"></div>
-</div>
+</section>
+<section class="card">
+<h2>☎️ संपर्क</h2><p>ऑर्डर और उपलब्धता की पुष्टि के लिए संपर्क करें।</p><a href="tel:7906720794"><button>7906720794 पर कॉल करें</button></a>
+</section>
+<div class="notice">महत्वपूर्ण: यह शुरुआती नमूना है। डेटा सिर्फ इसी डिवाइस/ब्राउज़र में सेव होता है। सभी मोबाइलों पर साझा डेटा और सुरक्षित एडमिन लॉगिन के लिए Firebase जैसे ऑनलाइन बैकएंड की स्थापना जरूरी है।</div>
 </main>
+<footer>© Maa Pitambara Fertilizers and Chemicals · Hey Farmer</footer>
 <script>
-function getFarmers(){
-try{return JSON.parse(localStorage.getItem('heyFarmerFarmers')||'[]')}
-catch(e){return []}
-}
-function registerFarmer(){
-const name=document.getElementById('name').value.trim();
-const mobile=document.getElementById('mobile').value.trim();
-const village=document.getElementById('village').value.trim();
-if(!name||!mobile){alert('नाम और मोबाइल नंबर भरें');return}
-const list=getFarmers();
-list.push({name,mobile,village});
-localStorage.setItem('heyFarmerFarmers',JSON.stringify(list));
-document.getElementById('message').textContent='रजिस्ट्रेशन सेव हो गया।';
-document.getElementById('name').value='';
-document.getElementById('mobile').value='';
-document.getElementById('village').value='';
-showFarmers();
-}
-function showFarmers(){
-document.getElementById('farmers').innerHTML=getFarmers().map(f=>
-'<p>'+escapeText(f.name)+' — '+escapeText(f.mobile)+' — '+escapeText(f.village)+'</p>'
-).join('')||'अभी कोई किसान दर्ज नहीं है।';
-}
-function escapeText(s){
-return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-showFarmers();
+const ADMIN_PIN='1358';
+const defaultProducts=[
+{id:'urea',name:'यूरिया खाद',price:0,stock:0,unit:'बैग'},
+{id:'dap',name:'DAP खाद',price:0,stock:0,unit:'बैग'},
+{id:'seed',name:'गेहूँ बीज',price:0,stock:0,unit:'किलो'},
+{id:'bio',name:'जैविक खाद',price:0,stock:0,unit:'पैक'},
+{id:'pesticide',name:'कीटनाशक',price:0,stock:0,unit:'पैक'}
+];
+function read(key,fallback){try{const x=localStorage.getItem(key);return x?JSON.parse(x):fallback}catch(e){return fallback}}
+function save(key,val){localStorage.setItem(key,JSON.stringify(val))}
+function getProducts(){let p=read('hf_products',null);if(!p){p=defaultProducts;save('hf_products',p)}return p}
+function getFarmers(){return read('hf_farmers',[])}
+function getOrders(){return read('hf_orders',[])}
+let cart=[];
+function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderProducts(){document.getElementById('products').innerHTML=getProducts().map(p=>`<div class="item"><h3>${safe(p.name)}</h3><p>कीमत: ${p.price>0?'₹'+p.price+' / '+safe(p.unit):'दुकान से पूछें'} · स्टॉक: ${p.stock>0?p.stock+' '+safe(p.unit):'पुष्टि आवश्यक'}</p><button onclick="addCart('${p.id}')">कार्ट में जोड़ें</button></div>`).join('')}
+function registerFarmer(){let name=document.getElementById('farmerName').value.trim(),mobile=document.getElementById('farmerMobile').value.trim(),village=document.getElementById('farmerVillage').value.trim();if(!name||!/^\d{10}$/.test(mobile)||!village){document.getElementById('farmerMsg').textContent='नाम, गाँव और सही 10 अंकों का मोबाइल नंबर भरें।';return}let a=getFarmers();a.push({name,mobile,village,date:new Date().toLocaleDateString('hi-IN')});save('hf_farmers',a);document.getElementById('farmerMsg').textContent='रजिस्ट्रेशन इस डिवाइस में सेव हुआ।';['farmerName','farmerMobile','farmerVillage'].forEach(id=>document.getElementById(id).value='')}
+function addCart(id){let p=getProducts().find(x=>x.id===id);if(!p)return;let x=cart.find(c=>c.id===id);if(x)x.qty++;else cart.push({id,name:p.name,qty:1,unit:p.unit});renderCart()}
+function renderCart(){document.getElementById('cart').innerHTML=cart.length?cart.map(c=>`<div class="item">${safe(c.name)} — ${c.qty} ${safe(c.unit)} <button class="secondary" onclick="removeCart('${c.id}')">हटाएँ</button></div>`).join(''):'<p>अभी कार्ट खाली है।</p>'}
+function removeCart(id){cart=cart.filter(c=>c.id!==id);renderCart()}
+function placeOrder(){let mobile=document.getElementById('orderMobile').value.trim(),address=document.getElementById('deliveryAddress').value.trim();if(!cart.length){document.getElementById('orderMsg').textContent='पहले उत्पाद कार्ट में जोड़ें।';return}if(!/^\d{10}$/.test(mobile)||!address){document.getElementById('orderMsg').textContent='सही मोबाइल नंबर और पता भरें।';return}let id='HF-'+Math.random().toString(36).slice(2,8).toUpperCase(),orders=getOrders();orders.push({id,mobile,address,items:cart.map(c=>({...c})),status:'अनुरोध मिला — दुकान से पुष्टि बाकी',date:new Date().toLocaleString('hi-IN')});save('hf_orders',orders);cart=[];renderCart();document.getElementById('orderMsg').textContent='डेमो ऑर्डर नंबर: '+id+'। इसे नोट करें; दुकान को अपने-आप सूचना नहीं गई है।'}
+function lookupStatus(){let id=document.getElementById('lookupOrder').value.trim().toUpperCase(),o=getOrders().find(x=>x.id===id);document.getElementById('lookupMsg').textContent=o?'स्थिति: '+o.status:'इस डिवाइस में यह ऑर्डर नहीं मिला।'}
+function adminLogin(){if(document.getElementById('adminPin').value===ADMIN_PIN){document.getElementById('adminPanel').hidden=false;document.getElementById('adminMsg').textContent='डेमो एडमिन खुल गया।';renderAdmin()}else document.getElementById('adminMsg').textContent='गलत PIN। डेमो PIN 1358 है।'}
+function adminLogout(){document.getElementById('adminPanel').hidden=true;document.getElementById('adminPin').value=''}
+function renderAdmin(){let fs=getFarmers(),os=getOrders(),ps=getProducts();document.getElementById('adminFarmers').innerHTML=fs.length?`<table><tr><th>नाम</th><th>मोबाइल</th><th>गाँव</th></tr>${fs.map(f=>`<tr><td>${safe(f.name)}</td><td>${safe(f.mobile)}</td><td>${safe(f.village)}</td></tr>`).join('')}</table>`:'अभी कोई किसान दर्ज नहीं है।';document.getElementById('adminOrders').innerHTML=os.length?os.map(o=>`<div class="item"><b>${safe(o.id)}</b><p>${safe(o.mobile)} · ${safe(o.address)}</p><p>${o.items.map(i=>safe(i.name)+' × '+i.qty).join(', ')}</p><label>स्थिति<select id="status-${o.id}"><option ${o.status.startsWith('अनुरोध')?'selected':''}>अनुरोध मिला — दुकान से पुष्टि बाकी</option><option ${o.status==='स्वीकार किया गया'?'selected':''}>स्वीकार किया गया</option><option ${o.status==='तैयार'?'selected':''}>तैयार</option><option ${o.status==='पूरा हुआ'?'selected':''}>पूरा हुआ</option><option ${o.status==='रद्द'?'selected':''}>रद्द</option></select></label><button onclick="updateStatus('${o.id}')">स्थिति सेव करें</button></div>`).join(''):'अभी कोई ऑर्डर नहीं है।';document.getElementById('adminStock').innerHTML=ps.map(p=>`<div class="item"><b>${safe(p.name)}</b><label>कीमत (₹)<input id="price-${p.id}" type="number" min="0" value="${p.price}"></label><label>स्टॉक (${safe(p.unit)})<input id="stock-${p.id}" type="number" min="0" value="${p.stock}"></label><button onclick="updateStock('${p.id}')">स्टॉक/कीमत सेव करें</button></div>`).join('')}
+function updateStatus(id){let os=getOrders(),o=os.find(x=>x.id===id);if(!o)return;o.status=document.getElementById('status-'+id).value;save('hf_orders',os);renderAdmin()}
+function updateStock(id){let ps=getProducts(),p=ps.find(x=>x.id===id);if(!p)return;p.price=Math.max(0,Number(document.getElementById('price-'+id).value)||0);p.stock=Math.max(0,Number(document.getElementById('stock-'+id).value)||0);save('hf_products',ps);renderProducts();renderAdmin()}
+function downloadBackup(){let rows=[['type','id/name','mobile','details','status']];getFarmers().forEach(f=>rows.push(['farmer',f.name,f.mobile,f.village,'']));getOrders().forEach(o=>rows.push(['order',o.id,o.mobile,o.items.map(i=>i.name+' x '+i.qty).join('; '),o.status]));let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n'),url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'})),a=document.createElement('a');a.href=url;a.download='hey-farmer-backup.csv';a.click();URL.revokeObjectURL(url)}
+renderProducts();renderCart();
 </script>
-</body>
-</html>
+</body></html>
