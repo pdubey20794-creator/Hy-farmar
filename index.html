@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hey Farmer</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f2f8ef;color:#203020}
+header{background:#176b35;color:white;padding:22px;text-align:center}
+main{padding:16px;max-width:600px;margin:auto}
+.card{background:white;padding:16px;margin:12px 0;border-radius:12px;box-shadow:0 2px 7px #ddd}
+input,button{box-sizing:border-box;width:100%;padding:12px;margin:6px 0;border-radius:7px;border:1px solid #bbb;font-size:16px}
+button{background:#176b35;color:white;border:0}
+h2{color:#176b35}
+</style>
+</head>
+<body>
+<header>
+<h1>🌾 Hey Farmer</h1>
+<p>Maa Pitambara Fertilizers and Chemicals</p>
+</header>
+<main>
+<div class="card">
+<h2>किसान रजिस्ट्रेशन</h2>
+<input id="name" placeholder="किसान का नाम">
+<input id="mobile" type="tel" placeholder="मोबाइल नंबर">
+<input id="village" placeholder="गाँव का नाम">
+<button onclick="registerFarmer()">रजिस्ट्रेशन करें</button>
+<p id="message"></p>
+</div>
+<div class="card">
+<h2>🛒 खाद एवं कृषि उत्पाद</h2>
+<p>बीज, खाद और कीटनाशक के लिए संपर्क करें।</p>
+<button onclick="location.href='tel:7906720794'">ऑर्डर के लिए कॉल करें</button>
+</div>
+<div class="card">
+<h2>किसान रजिस्ट्रेशन सूची</h2>
+<div id="farmers"></div>
+</div>
+</main>
+<script>
+function getFarmers(){
+try{return JSON.parse(localStorage.getItem('heyFarmerFarmers')||'[]')}
+catch(e){return []}
+}
+function registerFarmer(){
+const name=document.getElementById('name').value.trim();
+const mobile=document.getElementById('mobile').value.trim();
+const village=document.getElementById('village').value.trim();
+if(!name||!mobile){alert('नाम और मोबाइल नंबर भरें');return}
+const list=getFarmers();
+list.push({name,mobile,village});
+localStorage.setItem('heyFarmerFarmers',JSON.stringify(list));
+document.getElementById('message').textContent='रजिस्ट्रेशन सेव हो गया।';
+document.getElementById('name').value='';
+document.getElementById('mobile').value='';
+document.getElementById('village').value='';
+showFarmers();
+}
+function showFarmers(){
+document.getElementById('farmers').innerHTML=getFarmers().map(f=>
+'<p>'+escapeText(f.name)+' — '+escapeText(f.mobile)+' — '+escapeText(f.village)+'</p>'
+).join('')||'अभी कोई किसान दर्ज नहीं है।';
+}
+function escapeText(s){
+return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+showFarmers();
+</script>
+</body>
+</html>
